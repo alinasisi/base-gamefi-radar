@@ -1,0 +1,25 @@
+{
+  "name": "base-gamefi-radar",
+  "version": "1.0.0",
+  "description": "Daily AI-powered GameFi intelligence for Base ecosystem — active games, NFT assets, guild rankings, opportunity alerts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alinasisi/base-gamefi-radar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/alinasisi/base-gamefi-radar/issues"
+  },
+  "homepage": "https://github.com/alinasisi/base-gamefi-radar#readme",
+  "dependencies": {
+    "axios": "^1.17.0",
+    "dotenv": "^17.4.2"
+  }
+}
