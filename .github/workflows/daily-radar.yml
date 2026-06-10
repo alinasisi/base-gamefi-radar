@@ -1,0 +1,35 @@
+name: Daily GameFi Radar
+
+on:
+  schedule:
+    - cron: "23 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+      - run: sleep $((RANDOM % 1800))
+      - run: node src/bot.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_USERNAME: alinasisi
+          TALENT_WALLET: ${{ secrets.TALENT_WALLET }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      - name: Commit and push
+        run: |
+          git config --global user.name "gamefi-radar-bot"
+          git config --global user.email "bot@base-gamefi-radar"
+          mkdir -p reports
+          git add reports/
+          git diff --staged --quiet || git commit -m "radar: daily gamefi intelligence $(date +%Y-%m-%d)"
+          git push
