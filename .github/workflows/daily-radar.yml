@@ -2,7 +2,7 @@ name: Daily GameFi Radar
 
 on:
   schedule:
-    - cron: "23 8 * * *"
+    - cron: '23 8 * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,9 +16,11 @@ jobs:
           token: ${{ secrets.GH_PAT }}
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
       - run: npm install
-      - run: sleep $((RANDOM % 1800))
+      - name: Random delay (schedule only)
+        if: github.event_name == 'schedule'
+        run: sleep $((RANDOM % 3600))
       - run: node src/bot.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
