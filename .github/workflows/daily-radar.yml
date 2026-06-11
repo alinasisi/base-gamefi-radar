@@ -26,7 +26,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_USERNAME: alinasisi
           TALENT_WALLET: ${{ secrets.TALENT_WALLET }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
       - name: Commit and push
         run: |
           git config --global user.name "gamefi-radar-bot"
