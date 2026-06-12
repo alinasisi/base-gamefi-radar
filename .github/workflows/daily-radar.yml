@@ -3,6 +3,8 @@ name: Daily GameFi Radar
 on:
   schedule:
     - cron: '23 8 * * *'
+    - cron: '23 10 * * *'
+    - cron: '23 12 * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,16 +20,28 @@ jobs:
         with:
           node-version: '22'
       - run: npm install
+      - name: Skip if already ran today
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          if [ -f "reports/${TODAY}.md" ]; then
+            echo "already_ran=true" >> $GITHUB_OUTPUT
+          else
+            echo "already_ran=false" >> $GITHUB_OUTPUT
+          fi
       - name: Random delay (schedule only)
-        if: github.event_name == 'schedule'
-        run: sleep $((RANDOM % 3600))
-      - run: node src/bot.js
+        if: github.event_name == 'schedule' && steps.check.outputs.already_ran == 'false'
+        run: sleep $((RANDOM % 1800))
+      - name: Run bot
+        if: steps.check.outputs.already_ran == 'false'
+        run: node src/bot.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_USERNAME: alinasisi
           TALENT_WALLET: ${{ secrets.TALENT_WALLET }}
           GH_PAT: ${{ secrets.GH_PAT }}
       - name: Commit and push
+        if: steps.check.outputs.already_ran == 'false'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
@@ -38,3 +52,6 @@ jobs:
           git add reports/
           git diff --staged --quiet || git commit -m "radar: daily gamefi intelligence $(date +%Y-%m-%d)"
           git push origin main
+      - name: Already ran today
+        if: steps.check.outputs.already_ran == 'true'
+        run: echo "Report already exists for today, skipping."
