@@ -1,12 +1,12 @@
 name: Daily GameFi Radar
-
 on:
   schedule:
+    - cron: '23 6 * * *'
     - cron: '23 8 * * *'
     - cron: '23 10 * * *'
     - cron: '23 12 * * *'
+    - cron: '23 14 * * *'
   workflow_dispatch:
-
 jobs:
   radar:
     runs-on: ubuntu-latest
@@ -29,9 +29,6 @@ jobs:
           else
             echo "already_ran=false" >> $GITHUB_OUTPUT
           fi
-      - name: Random delay (schedule only)
-        if: github.event_name == 'schedule' && steps.check.outputs.already_ran == 'false'
-        run: sleep $((RANDOM % 1800))
       - name: Run bot
         if: steps.check.outputs.already_ran == 'false'
         run: node src/bot.js
@@ -48,6 +45,7 @@ jobs:
           git config --global user.name "gamefi-radar-bot"
           git config --global user.email "bot@base-gamefi-radar"
           git remote set-url origin "https://x-access-token:${GH_PAT}@github.com/alinasisi/base-gamefi-radar.git"
+          git pull origin main --rebase
           mkdir -p reports
           git add reports/
           git diff --staged --quiet || git commit -m "radar: daily gamefi intelligence $(date +%Y-%m-%d)"
