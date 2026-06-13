@@ -42,8 +42,8 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git config --global user.name "gamefi-radar-bot"
-          git config --global user.email "bot@base-gamefi-radar"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GH_PAT}@github.com/alinasisi/base-gamefi-radar.git"
           git pull origin main --rebase
           mkdir -p reports
